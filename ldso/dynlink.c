@@ -1436,6 +1436,8 @@ void __dls2(unsigned char *base, size_t *sp)
 		void *p2 = (void *)sp[-1];
 		if (!p1) {
 			size_t *auxv, aux[AUX_CNT];
+			/* AT_PAGESZ may not be set from shellcode */
+			if (aux[AT_PAGESZ] == 0) aux[AT_PAGESZ] = 4096;
 			for (auxv=sp+1+*sp+1; *auxv; auxv++); auxv++;
 			decode_vec(auxv, aux, AUX_CNT);
 			if (aux[AT_BASE]) ldso.base = (void *)aux[AT_BASE];

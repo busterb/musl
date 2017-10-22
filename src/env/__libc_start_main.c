@@ -26,6 +26,8 @@ void __init_libc(char **envp, char *pn)
 	for (i=0; envp[i]; i++);
 	libc.auxv = auxv = (void *)(envp+i+1);
 	for (i=0; auxv[i]; i+=2) if (auxv[i]<AUX_CNT) aux[auxv[i]] = auxv[i+1];
+	/* AT_PAGESZ may not be set from shellcode */
+	if (aux[AT_PAGESZ] == 0) aux[AT_PAGESZ] = 4096;
 	__hwcap = aux[AT_HWCAP];
 	__sysinfo = aux[AT_SYSINFO];
 	libc.page_size = aux[AT_PAGESZ];
